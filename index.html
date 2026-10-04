@@ -1,0 +1,1053 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script>document.documentElement.classList.add('js')</script>
+
+<!-- ===== SEO ===== -->
+<title>CableControll — управление телефоном с ПК по USB. Бесплатно</title>
+<meta name="description" content="CableControll показывает экран Android на мониторе ПК, передаёт звук и файлы по USB-отладке (ADB) и позволяет управлять компьютером с телефона. Бесплатно, без рекламы и регистрации.">
+<link rel="canonical" href="https://cablecontroll.app/">
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="CableControll">
+<meta property="og:title" content="CableControll — телефон на мониторе, управление в обе стороны">
+<meta property="og:description" content="Экран Android на ПК, звук, файлы и обратное управление — напрямую по USB-кабелю. Бесплатно, без рекламы и регистрации.">
+<meta property="og:url" content="https://cablecontroll.app/">
+<meta name="twitter:card" content="summary">
+
+<!-- Favicon -->
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2334E0A1'/%3E%3Cpath d='M21 7c-7 0-7 9-11 9 4 0 4 9 11 9' fill='none' stroke='%230B0D0E' stroke-width='2.6' stroke-linecap='round'/%3E%3C/svg%3E">
+
+<!-- Шрифты (если недоступны — сайт работает на системных, ничего не ломается) -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;600;700&family=Manrope:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<!-- Микроразметка SoftwareApplication -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "CableControll",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "Windows 10, Windows 11",
+  "softwareVersion": "2.4.1",
+  "description": "Управление Android с ПК и ПК с телефона по USB-отладке: зеркалирование экрана, звук, файлы. Бесплатно, без рекламы.",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "RUB" },
+  "isAccessibleForFree": true
+}
+</script>
+
+<style>
+:root{
+  --bg:#0B0D0E; --bg-soft:#0E1112; --card:#131619; --card-2:#171B1F;
+  --line:rgba(255,255,255,.07); --line-strong:rgba(255,255,255,.13);
+  --text:#E9EDF0; --muted:#98A2A8;
+  --accent:#34E0A1; --accent-hover:#54F0B6; --accent-ink:#052A1E;
+  --radius:16px; --header-h:68px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'Manrope',system-ui,sans-serif;font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+section{scroll-margin-top:calc(var(--header-h) + 16px)}
+::selection{background:var(--accent);color:var(--accent-ink)}
+.container{max-width:1120px;margin:0 auto;padding:0 24px}
+.section{padding:96px 0}
+.section--soft{background:var(--bg-soft);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+
+.kicker{font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:.12em;color:var(--accent);text-transform:uppercase;display:flex;align-items:center;gap:10px;margin-bottom:16px}
+.kicker::before{content:"";width:26px;height:1px;background:var(--accent)}
+h2{font-family:'Unbounded',sans-serif;font-weight:600;font-size:clamp(26px,4vw,40px);line-height:1.15}
+.section-head{max-width:640px;margin-bottom:52px}
+.section-head p{color:var(--muted);margin-top:14px;font-size:17px}
+
+/* Иконки-спрайт */
+.ic{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
+
+/* Кнопки */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:14px 24px;border-radius:12px;font-weight:600;font-size:16px;transition:transform .2s,background .2s,border-color .2s,box-shadow .2s;white-space:nowrap}
+.btn .ic{width:18px;height:18px}
+.btn-primary{background:var(--accent);color:var(--accent-ink)}
+.btn-primary:hover{background:var(--accent-hover);transform:translateY(-2px);box-shadow:0 14px 34px -12px rgba(52,224,161,.5)}
+.btn-ghost{border:1px solid var(--line-strong)}
+.btn-ghost:hover{border-color:var(--accent);color:var(--accent);transform:translateY(-2px)}
+.btn-lg{padding:18px 30px;font-size:17px;border-radius:14px}
+.btn-block{width:100%}
+kbd{font-family:'JetBrains Mono',monospace;font-size:11px;padding:2px 7px;border-radius:6px;background:var(--card-2);border:1px solid var(--line-strong);border-bottom-width:2px}
+
+/* Шапка */
+.header{position:fixed;top:0;left:0;right:0;z-index:100;height:var(--header-h);transition:background .3s,border-color .3s;border-bottom:1px solid transparent}
+.header.scrolled{background:rgba(11,13,14,.85);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-color:var(--line)}
+.header-inner{height:var(--header-h);display:flex;align-items:center;gap:32px}
+.logo{display:flex;align-items:center;gap:10px;font-family:'Unbounded',sans-serif;font-weight:600;font-size:16px}
+.logo-mark{width:32px;height:32px;border-radius:9px;background:var(--accent);display:grid;place-items:center;flex-shrink:0}
+.logo-mark .ic{width:18px;height:18px;stroke:var(--accent-ink);stroke-width:2.2}
+.nav{display:flex;gap:28px;margin-left:auto}
+.nav a{color:var(--muted);font-size:15px;font-weight:500;transition:color .2s}
+.nav a:hover{color:var(--accent)}
+.header .btn{padding:10px 18px;font-size:14px}
+.burger{display:none;margin-left:auto;width:42px;height:42px;border:1px solid var(--line-strong);border-radius:10px;position:relative;z-index:110}
+.burger span{position:absolute;left:11px;right:11px;height:2px;background:var(--text);border-radius:2px;transition:transform .25s,top .25s,opacity .25s}
+.burger span:nth-child(1){top:15px}.burger span:nth-child(2){top:21px}.burger span:nth-child(3){top:27px}
+.burger.open span:nth-child(1){top:21px;transform:rotate(45deg)}
+.burger.open span:nth-child(2){opacity:0}
+.burger.open span:nth-child(3){top:21px;transform:rotate(-45deg)}
+.mobile-menu{display:none;position:fixed;top:var(--header-h);left:0;right:0;z-index:99;background:rgba(11,13,14,.96);backdrop-filter:blur(16px);border-bottom:1px solid var(--line);padding:16px 24px 28px}
+.mobile-menu.open{display:block;animation:menuIn .25s ease}
+@keyframes menuIn{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}
+.mobile-menu a{display:block;padding:13px 4px;font-size:17px;font-weight:600;border-bottom:1px solid var(--line)}
+.mobile-menu .btn{margin-top:16px}
+
+/* Герой */
+.hero{padding:calc(var(--header-h) + 64px) 0 72px;position:relative;background-image:radial-gradient(rgba(255,255,255,.045) 1px,transparent 1px);background-size:26px 26px}
+.hero::after{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(closest-side at 50% 40%,transparent 55%,var(--bg) 100%)}
+.hero-grid{position:relative;z-index:1;display:grid;grid-template-columns:1.02fr 1fr;gap:56px;align-items:center}
+.hero-badge{display:inline-flex;align-items:center;gap:10px;font-family:'JetBrains Mono',monospace;font-size:12.5px;color:var(--muted);border:1px solid var(--line-strong);border-radius:99px;padding:7px 14px;margin-bottom:26px}
+.hero-badge b{color:var(--accent);font-weight:500}
+.pulse-dot{width:7px;height:7px;border-radius:50%;background:var(--accent);animation:pulse 2s ease infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+h1{font-family:'Unbounded',sans-serif;font-weight:700;font-size:clamp(30px,4.6vw,52px);line-height:1.12;letter-spacing:-.015em}
+h1 .accent{color:var(--accent)}
+.hero-sub{color:var(--muted);font-size:18px;max-width:520px;margin:22px 0 32px}
+.hero-sub strong{color:var(--text);font-weight:600}
+.hero-actions{display:flex;gap:14px;flex-wrap:wrap}
+.hero-note{display:none;font-size:13.5px;color:var(--accent);margin-top:14px}
+.hero-chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:30px}
+.chip{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--muted);border:1px solid var(--line-strong);border-radius:99px;padding:6px 13px;display:inline-flex;align-items:center;gap:7px}
+.chip .ic{width:13px;height:13px;stroke:var(--accent)}
+
+/* Демо-сцена */
+.demo-wrap{position:relative}
+.demo{position:relative;width:100%;overflow:visible}
+.demo-inner{width:640px;height:448px;position:relative;transform-origin:top left}
+.demo-hint{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:14px;color:var(--muted);font-size:13.5px;text-align:center}
+.demo-hint .ic{width:15px;height:15px;stroke:var(--accent)}
+.phone{position:absolute;left:16px;top:44px;width:154px}
+.phone-body{border:1px solid var(--line-strong);border-radius:26px;padding:8px;background:#0E1112;box-shadow:0 30px 60px -20px rgba(0,0,0,.7)}
+.phone-screen{position:relative;border-radius:19px;background:#0A0C0D;width:136px;height:287px;overflow:hidden;cursor:pointer;touch-action:none}
+.phone-notch{position:absolute;top:7px;left:50%;transform:translateX(-50%);width:38px;height:9px;border-radius:5px;background:#15191B;z-index:2}
+.phone-ui{position:absolute;inset:0;padding:24px 10px 10px;display:flex;flex-direction:column}
+.p-status{display:flex;justify-content:space-between;align-items:center;font-family:'JetBrains Mono',monospace;font-size:7.5px;color:var(--muted)}
+.p-status .right{display:flex;gap:4px}
+.p-status .ic{width:9px;height:9px;stroke:var(--muted)}
+.p-clock{font-family:'Unbounded',sans-serif;font-weight:600;font-size:26px;margin-top:26px}
+.p-date{font-size:8.5px;color:var(--muted);margin-top:3px}
+.p-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:22px}
+.p-tile{aspect-ratio:1;border-radius:12px;background:#14181A;border:1px solid var(--line);display:grid;place-items:center}
+.p-tile .ic{width:15px;height:15px;stroke:#7E898F}
+.p-dock{margin-top:auto;display:flex;justify-content:space-around;background:#121619;border:1px solid var(--line);border-radius:14px;padding:8px 6px}
+.p-dock .ic{width:12px;height:12px;stroke:#7E898F}
+.monitor{position:absolute;left:228px;top:60px;width:400px}
+.monitor-screen{border:1px solid var(--line-strong);border-radius:14px;background:#0E1113;padding:10px;box-shadow:0 30px 60px -20px rgba(0,0,0,.7)}
+.app-window{height:198px;border-radius:8px;background:#121517;border:1px solid var(--line);display:flex;flex-direction:column;overflow:hidden}
+.app-bar{height:26px;flex-shrink:0;display:flex;align-items:center;gap:8px;padding:0 9px;border-bottom:1px solid var(--line)}
+.app-dot{width:6px;height:6px;border-radius:50%;background:#2A3136}
+.app-dot:first-child{background:var(--accent)}
+.app-title{font-family:'JetBrains Mono',monospace;font-size:8px;color:var(--muted);overflow:hidden;white-space:nowrap}
+.app-pill{margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:7.5px;color:var(--accent);border:1px solid rgba(52,224,161,.35);border-radius:99px;padding:1.5px 7px;flex-shrink:0}
+.app-body{flex:1;display:flex;gap:9px;padding:8px;min-height:0}
+.app-side{width:22px;border:1px solid var(--line);border-radius:6px;display:flex;flex-direction:column;align-items:center;gap:9px;padding-top:9px}
+.app-side .ic{width:11px;height:11px;stroke:#68737A}
+.app-side .on{stroke:var(--accent)}
+.mirror{position:relative;width:84px;height:177px;border-radius:6px;background:#0A0C0D;border:1px solid var(--line-strong);overflow:hidden;cursor:pointer;touch-action:none;flex-shrink:0}
+.mirror-scale{width:136px;height:287px;transform:scale(.617);transform-origin:top left}
+.app-main{flex:1;display:flex;flex-direction:column;gap:7px;justify-content:center;min-width:0}
+.m-row{display:flex;justify-content:space-between;align-items:baseline;font-family:'JetBrains Mono',monospace;font-size:8px;color:var(--muted)}
+.m-row b{font-size:12px;color:var(--text);font-weight:500}
+.m-row b.on{color:var(--accent)}
+.m-bar{height:3px;border-radius:2px;background:#1B2023;overflow:hidden}
+.m-bar i{display:block;height:100%;background:var(--accent);animation:bitrate 4s ease-in-out infinite}
+@keyframes bitrate{0%,100%{width:58%}40%{width:74%}70%{width:48%}}
+.m-cap{font-family:'JetBrains Mono',monospace;font-size:7.5px;color:#5C666C}
+.monitor-stand{width:64px;height:26px;margin:0 auto;background:#171C1F;clip-path:polygon(18% 0,82% 0,100% 100%,0 100%)}
+.monitor-base{width:132px;height:8px;margin:0 auto;border-radius:4px;background:#1A2023;border:1px solid var(--line)}
+.cable{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:3}
+.cable .flow{fill:none;stroke:#454C50;stroke-width:3.2;stroke-linecap:round}
+.packet{fill:var(--accent)}
+.plug{fill:#2B3236;stroke:#4A5257;stroke-width:1}
+.pc-cursor{position:absolute;z-index:6;pointer-events:none;opacity:0;transition:opacity .2s}
+.pc-cursor.show{opacity:1}
+.mirror .pc-cursor svg{width:11px;height:11px}
+.touch-dot{position:absolute;z-index:5;width:14px;height:14px;border-radius:50%;pointer-events:none;background:rgba(52,224,161,.28);border:2px solid var(--accent);transform:translate(-50%,-50%);opacity:0;transition:opacity .2s}
+.touch-dot.show{opacity:1}
+.ripple{position:absolute;z-index:4;width:36px;height:36px;border-radius:50%;pointer-events:none;border:2px solid var(--accent);transform:translate(-50%,-50%) scale(.3);opacity:.9;animation:rip .6s ease-out forwards}
+@keyframes rip{to{transform:translate(-50%,-50%) scale(1.5);opacity:0}}
+.auto-dot{position:absolute;z-index:4;width:7px;height:7px;border-radius:50%;pointer-events:none;background:rgba(52,224,161,.5);transform:translate(-50%,-50%);animation:wander 11s ease-in-out infinite}
+@keyframes wander{0%,100%{top:18%;left:22%}22%{top:62%;left:70%}45%{top:38%;left:78%}68%{top:66%;left:30%}85%{top:30%;left:55%}}
+
+/* Возможности */
+.features{display:grid;grid-template-columns:repeat(12,1fr);gap:16px}
+.f-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:30px 30px 26px;display:flex;flex-direction:column;transition:transform .3s,border-color .3s,background .3s}
+.f-card:hover{transform:translateY(-4px);border-color:rgba(52,224,161,.4);background:var(--card-2)}
+.f-card h3{font-family:'Unbounded',sans-serif;font-weight:600;font-size:19px;margin:18px 0 10px}
+.f-card p{color:var(--muted);font-size:15px}
+.f-ico{width:46px;height:46px;border-radius:12px;border:1px solid var(--line-strong);display:grid;place-items:center;background:var(--bg-soft)}
+.f-ico .ic{width:22px;height:22px;stroke:var(--accent)}
+.f-meta{margin-top:auto;padding-top:22px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--muted);display:flex;align-items:center;gap:8px}
+.f-meta::before{content:"→";color:var(--accent)}
+.span-7{grid-column:span 7}.span-5{grid-column:span 5}
+
+/* Шаги */
+.steps{position:relative;max-width:760px}
+.step{display:grid;grid-template-columns:88px 1fr;gap:28px;padding-bottom:52px;position:relative}
+.step:last-child{padding-bottom:0}
+.step::before{content:"";position:absolute;left:43px;top:92px;bottom:6px;width:1px;background:repeating-linear-gradient(180deg,var(--line-strong) 0 5px,transparent 5px 11px)}
+.step:last-child::before{display:none}
+.step-num{width:88px;height:88px;border-radius:20px;border:1px solid var(--line-strong);background:var(--card);display:grid;place-items:center;position:relative;z-index:1}
+.step-num .ic{width:30px;height:30px;stroke:var(--accent)}
+.step h3{font-family:'Unbounded',sans-serif;font-weight:600;font-size:21px;margin-bottom:10px}
+.step p{color:var(--muted);max-width:560px}
+.crumbs{display:flex;flex-wrap:wrap;align-items:center;gap:7px;margin-top:18px}
+.crumb{font-family:'JetBrains Mono',monospace;font-size:12px;padding:6px 12px;border-radius:8px;background:var(--card);border:1px solid var(--line-strong);color:var(--muted)}
+.crumb-sep{color:#4A545A}
+.crumb--on{border-color:rgba(52,224,161,.45);color:var(--accent);background:rgba(52,224,161,.07)}
+.adb-dialog{margin-top:18px;max-width:340px;background:var(--card-2);border:1px solid var(--line-strong);border-radius:14px;padding:16px 18px;font-size:13.5px;box-shadow:0 16px 36px -18px rgba(0,0,0,.6)}
+.adb-dialog b{display:block;font-size:14.5px;margin-bottom:6px}
+.adb-dialog .fp{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);margin-bottom:14px}
+.adb-dialog .row{display:flex;gap:10px;justify-content:flex-end}
+.adb-dialog .row span{padding:7px 16px;border-radius:9px;font-size:13px;font-weight:600}
+.adb-dialog .no{color:var(--muted)}
+.adb-dialog .yes{background:var(--accent);color:var(--accent-ink)}
+.terminal{margin-top:18px;max-width:420px;background:#0A0C0D;border:1px solid var(--line-strong);border-radius:12px;padding:13px 16px;font-family:'JetBrains Mono',monospace;font-size:12.5px;color:var(--muted)}
+.terminal .dollar,.terminal .ok{color:var(--accent)}
+
+/* Скачивание */
+.dl-grid{display:grid;grid-template-columns:1fr 1.1fr;gap:56px;align-items:start}
+.dl-cta-wrap{position:sticky;top:calc(var(--header-h) + 24px)}
+.dl-cta{width:100%;flex-direction:column;gap:4px;padding:22px 30px;border-radius:16px}
+.dl-cta .big{font-size:19px;display:inline-flex;align-items:center;gap:10px}
+.dl-cta .big .ic{width:21px;height:21px}
+.dl-cta .small{font-family:'JetBrains Mono',monospace;font-size:12.5px;opacity:.75;font-weight:500}
+.trust{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.sha{margin-top:20px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:13px 16px;display:flex;align-items:center;gap:12px}
+.sha .label{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);flex-shrink:0}
+.sha code{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1}
+.sha button{width:30px;height:30px;border-radius:8px;border:1px solid var(--line-strong);display:grid;place-items:center;flex-shrink:0;color:var(--muted);transition:border-color .2s,color .2s}
+.sha button:hover{border-color:var(--accent);color:var(--accent)}
+.sha button .ic{width:14px;height:14px}
+.version-table{width:100%;border-collapse:collapse;font-size:14.5px}
+.version-table th{text-align:left;font-family:'JetBrains Mono',monospace;font-weight:500;font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);padding:0 14px 12px;border-bottom:1px solid var(--line-strong)}
+.version-table td{padding:15px 14px;border-bottom:1px solid var(--line);vertical-align:middle}
+.version-table tbody tr:hover{background:rgba(255,255,255,.025)}
+.version-table tr.current{background:rgba(52,224,161,.05)}
+.file-cell{display:flex;flex-direction:column;gap:2px}
+.file-cell .name{font-family:'JetBrains Mono',monospace;font-size:13px}
+.file-cell .os{font-size:12px;color:var(--muted)}
+.badge-os{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--accent);border:1px solid rgba(52,224,161,.4);border-radius:99px;padding:1.5px 8px;margin-left:8px}
+.ver{font-family:'JetBrains Mono',monospace;font-size:13px}
+.dl-link{width:36px;height:36px;border-radius:10px;border:1px solid var(--line-strong);display:grid;place-items:center;color:var(--muted);transition:all .2s}
+.dl-link:hover{border-color:var(--accent);color:var(--accent);transform:translateY(-2px)}
+.dl-link .ic{width:16px;height:16px}
+tr.soon td{color:var(--muted)}
+tr.soon .name{color:var(--muted)}
+.soon-pill{font-family:'JetBrains Mono',monospace;font-size:11px;border:1px solid var(--line-strong);border-radius:99px;padding:2px 10px;color:var(--muted)}
+
+/* Требования */
+.specs-grid{display:grid;grid-template-columns:1fr 1.2fr;gap:56px;align-items:start}
+.specs-note{color:var(--muted);font-size:16px;margin-top:16px}
+.spec-row{display:flex;align-items:baseline;gap:14px;padding:15px 0;border-bottom:1px solid var(--line)}
+.spec-row:first-child{padding-top:0}
+.spec-row .k{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--muted);flex-shrink:0}
+.spec-row .dots{flex:1;border-bottom:1px dotted rgba(255,255,255,.18);transform:translateY(-4px)}
+.spec-row .v{font-weight:600;text-align:right}
+
+/* Безопасность */
+.sec-grid{display:grid;grid-template-columns:1.1fr 1fr;gap:56px;align-items:center}
+.sec-points{margin-top:30px;display:flex;flex-direction:column;gap:20px}
+.sec-point{display:flex;gap:14px}
+.sec-point .ic{width:20px;height:20px;stroke:var(--accent);margin-top:3px}
+.sec-point b{display:block;font-size:16px;margin-bottom:2px}
+.sec-point span{color:var(--muted);font-size:14.5px}
+.flow-diagram{display:flex;align-items:center;padding:20px 0 8px}
+.flow-node{width:64px;height:64px;border-radius:16px;border:1px solid var(--line-strong);background:var(--card);display:grid;place-items:center;flex-shrink:0}
+.flow-node .ic{width:26px;height:26px;stroke:var(--text)}
+.flow-node--accent{border-color:rgba(52,224,161,.5);background:rgba(52,224,161,.08)}
+.flow-node--accent .ic{stroke:var(--accent)}
+.flow-line{flex:1;height:2px}
+.flow-line svg{width:100%;height:2px;overflow:visible}
+.flow-line line{stroke:var(--accent);stroke-width:2;stroke-dasharray:5 8;animation:dash 1.1s linear infinite}
+@keyframes dash{to{stroke-dashoffset:-13}}
+.flow-caption{display:flex;align-items:center;gap:10px;margin-top:26px;color:var(--muted);font-size:14.5px;padding-top:20px;border-top:1px dashed var(--line-strong)}
+.flow-caption .ic{width:19px;height:19px;stroke:#5C666C}
+
+/* FAQ (нативные details/summary — работают даже без JS) */
+.faq-list{max-width:760px}
+.faq-item{border:1px solid var(--line);border-radius:14px;background:var(--card);margin-bottom:12px;transition:border-color .25s}
+.faq-item[open]{border-color:rgba(52,224,161,.4)}
+.faq-item summary{list-style:none;display:flex;align-items:center;gap:16px;padding:20px 24px;cursor:pointer;font-weight:600;font-size:16.5px}
+.faq-item summary::-webkit-details-marker{display:none}
+.faq-item .idx{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent);flex-shrink:0}
+.faq-item .t{flex:1}
+.faq-item .pm{width:26px;height:26px;position:relative;flex-shrink:0}
+.faq-item .pm::before,.faq-item .pm::after{content:"";position:absolute;top:50%;left:50%;width:12px;height:2px;background:var(--muted);transform:translate(-50%,-50%);transition:transform .3s,background .3s}
+.faq-item .pm::after{transform:translate(-50%,-50%) rotate(90deg)}
+.faq-item[open] .pm::before{background:var(--accent)}
+.faq-item[open] .pm::after{transform:translate(-50%,-50%) rotate(0)}
+.faq-item[open] .faq-a{animation:faqIn .3s ease}
+@keyframes faqIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+.faq-a p{padding:0 24px 22px 55px;color:var(--muted);font-size:15px;max-width:640px}
+.faq-a b{color:var(--text)}
+
+/* Подвал */
+.footer{border-top:1px solid var(--line);padding:56px 0 32px;background:var(--bg-soft)}
+.footer-top{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:40px;padding-bottom:44px;border-bottom:1px solid var(--line)}
+.footer .logo{margin-bottom:14px}
+.footer-tag{color:var(--muted);font-size:14.5px;max-width:280px}
+.footer h4{font-family:'JetBrains Mono',monospace;font-size:12px;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);margin-bottom:16px;font-weight:500}
+.footer-col a{display:block;color:var(--muted);font-size:14.5px;padding:5px 0;transition:color .2s}
+.footer-col a:hover{color:var(--accent)}
+.footer-bottom{display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between;padding-top:26px;color:var(--muted);font-size:13.5px}
+
+/* Тост + мобильная CTA */
+.toast{position:fixed;left:50%;bottom:28px;transform:translate(-50%,20px);z-index:200;background:#15191C;border:1px solid rgba(52,224,161,.5);border-radius:12px;padding:12px 20px;font-size:14.5px;display:flex;align-items:center;gap:10px;opacity:0;pointer-events:none;transition:opacity .3s,transform .3s;box-shadow:0 20px 40px -12px rgba(0,0,0,.6)}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+.toast .ic{width:16px;height:16px;stroke:var(--accent)}
+.mobile-cta{position:fixed;left:12px;right:12px;bottom:12px;z-index:90;display:none;background:rgba(14,17,18,.92);backdrop-filter:blur(14px);border:1px solid var(--line-strong);border-radius:16px;padding:12px;transform:translateY(120%);transition:transform .35s;box-shadow:0 18px 44px -8px rgba(0,0,0,.7)}
+.mobile-cta.show{transform:translateY(0)}
+.mobile-cta .row{display:flex;justify-content:space-between;margin-bottom:9px;padding:0 4px}
+.mobile-cta .row span{font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--muted)}
+
+/* Появление при скролле — только если JS работает (.js ставится скриптом в <head>);
+   если скрипт не выполнился, весь контент просто виден */
+.js .reveal{opacity:0;transform:translateY(24px);transition:opacity .7s ease,transform .7s ease;transition-delay:var(--d,0s)}
+.js .reveal.in{opacity:1;transform:none}
+
+@media (max-width:1023px){
+  .hero-grid{grid-template-columns:1fr;gap:48px}
+  .span-7,.span-5{grid-column:span 12}
+  .dl-grid,.specs-grid,.sec-grid{grid-template-columns:1fr;gap:40px}
+  .dl-cta-wrap{position:static}
+  .footer-top{grid-template-columns:1fr 1fr}
+}
+@media (max-width:767px){
+  .nav,.header .btn-primary{display:none}
+  .burger{display:block}
+  .section{padding:72px 0}
+  .hero{padding-top:calc(var(--header-h) + 40px)}
+  .hero-actions{flex-direction:column}
+  .hero-actions .btn{width:100%}
+  .hero-note{display:block}
+  .version-table th:nth-child(3),.version-table td:nth-child(3){display:none}
+  .step{grid-template-columns:64px 1fr;gap:18px}
+  .step-num{width:64px;height:64px;border-radius:16px}
+  .step-num .ic{width:24px;height:24px}
+  .step::before{left:31px;top:70px}
+  .faq-item summary{padding:17px 18px;font-size:15.5px}
+  .faq-a p{padding:0 18px 20px 46px}
+  .footer-top{grid-template-columns:1fr}
+  .mobile-cta{display:block}
+  body{padding-bottom:96px}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}
+  html{scroll-behavior:auto}
+  .js .reveal{opacity:1;transform:none}
+}
+</style>
+</head>
+<body>
+
+<!-- ===== SVG-СПРАЙТ (все иконки встроены — внешних загрузок нет) ===== -->
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true">
+  <symbol id="i-dl" viewBox="0 0 24 24"><path d="M12 3v12M7 10l5 5 5-5M4 21h16"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 6.5"/></symbol>
+  <symbol id="i-cable" viewBox="0 0 24 24"><path d="M16 4c-5.5 0-5.5 8-9 8 3.5 0 3.5 8 9 8"/></symbol>
+  <symbol id="i-mirror" viewBox="0 0 24 24"><rect x="2" y="4" width="12" height="9" rx="2"/><path d="M5 17h6"/><rect x="14" y="8" width="8" height="14" rx="2"/><path d="M17.5 19h1"/></symbol>
+  <symbol id="i-mouse" viewBox="0 0 24 24"><rect x="8.5" y="3" width="7" height="17" rx="3.5"/><path d="M12 7v3"/></symbol>
+  <symbol id="i-vol" viewBox="0 0 24 24"><path d="M4 9.5v5h3.5L12 18V6L7.5 9.5H4z"/><path d="M15.5 9a4.2 4.2 0 010 6M18 6.8a8 8 0 010 10.4"/></symbol>
+  <symbol id="i-back" viewBox="0 0 24 24"><rect x="7" y="2" width="10" height="20" rx="2"/><path d="M12 15V9M9.5 11.5L12 9l2.5 2.5"/></symbol>
+  <symbol id="i-files" viewBox="0 0 24 24"><rect x="8" y="7" width="12" height="13" rx="2"/><path d="M16 7V5a2 2 0 00-2-2H6a2 2 0 00-2 2v11a2 2 0 002 2h2"/></symbol>
+  <symbol id="i-wifi" viewBox="0 0 24 24"><path d="M2 9a15 15 0 0120 0M5.5 12.5a10 10 0 0113 0M9 16a5 5 0 016 0M12 19.5h.01"/></symbol>
+  <symbol id="i-batt" viewBox="0 0 24 24"><rect x="2" y="8" width="16" height="8" rx="2"/><path d="M21 11v2"/><rect x="4.5" y="10.5" width="8" height="3" rx="1" fill="currentColor" stroke="none"/></symbol>
+  <symbol id="i-cam" viewBox="0 0 24 24"><rect x="2.5" y="7" width="19" height="13" rx="2.5"/><circle cx="12" cy="13.5" r="3.5"/><path d="M8.5 7l1.2-2.5h4.6L15.5 7"/></symbol>
+  <symbol id="i-msg" viewBox="0 0 24 24"><path d="M21 11.5a8.5 8.5 0 01-8.5 8.5c-1.5 0-2.9-.4-4.1-1L3 20.5 4.4 16A8.5 8.5 0 1121 11.5z"/></symbol>
+  <symbol id="i-music" viewBox="0 0 24 24"><path d="M9 17.5V6.3l10-2v10.2"/><circle cx="6.8" cy="17.5" r="2.2"/><circle cx="16.8" cy="14.5" r="2.2"/></symbol>
+  <symbol id="i-sliders" viewBox="0 0 24 24"><path d="M4 7h9M19 7h1M4 15h1M9 15h11"/><circle cx="16.5" cy="7" r="2.2"/><circle cx="6.5" cy="15" r="2.2"/></symbol>
+  <symbol id="i-dev" viewBox="0 0 24 24"><rect x="7.5" y="2.5" width="9" height="19" rx="2.5"/><path d="M11 18.5h2"/></symbol>
+  <symbol id="i-call" viewBox="0 0 24 24"><path d="M22 16.9v3a2 2 0 01-2.2 2 19.8 19.8 0 01-8.6-3.1 19.5 19.5 0 01-6-6A19.8 19.8 0 012.1 4.2 2 2 0 014.1 2h3a2 2 0 012 1.7c.1 1 .4 2 .7 2.9a2 2 0 01-.5 2.1L8 10a16 16 0 006 6l1.3-1.3a2 2 0 012.1-.5c1 .3 2 .6 3 .7a2 2 0 011.6 2z"/></symbol>
+  <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.8 3 2.8 15 0 18M12 3c-2.8 3-2.8 15 0 18"/></symbol>
+  <symbol id="i-kbd" viewBox="0 0 24 24"><rect x="2.5" y="6" width="19" height="12" rx="2"/><path d="M6 10h.01M10 10h.01M14 10h.01M18 10h.01M7 14.5h10"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 2.5l7.5 3.2v5.6c0 4.8-3.2 8.3-7.5 9.7-4.3-1.4-7.5-4.9-7.5-9.7V5.7L12 2.5z"/><path d="M9 11.8l2.1 2.1 4-4"/></symbol>
+  <symbol id="i-eyeoff" viewBox="0 0 24 24"><path d="M3 3l18 18"/><path d="M10.6 5.1A9.8 9.8 0 0112 5c7 0 10 7 10 7a15.6 15.6 0 01-3.1 4.3M6.6 6.6C3.7 8.5 2 12 2 12s3 7 10 7a9.9 9.9 0 004.3-1"/><path d="M9.9 9.9a3 3 0 004.2 4.2"/></symbol>
+  <symbol id="i-lock" viewBox="0 0 24 24"><rect x="4.5" y="10.5" width="15" height="10.5" rx="2"/><path d="M8 10.5V7a4 4 0 018 0v3.5"/></symbol>
+  <symbol id="i-cloudoff" viewBox="0 0 24 24"><path d="M3 3l18 18"/><path d="M8 18h8.5a4 4 0 00.6-7.95A6 6 0 006.7 8.2"/></symbol>
+  <symbol id="i-copy" viewBox="0 0 24 24"><rect x="9" y="9" width="11.5" height="11.5" rx="2"/><path d="M5.5 15H4.5a2 2 0 01-2-2V4.5a2 2 0 012-2H13a2 2 0 012 2v1"/></symbol>
+  <symbol id="i-play" viewBox="0 0 24 24"><rect x="2.5" y="4" width="19" height="13" rx="2"/><path d="M10 8.5l4.5 2.5-4.5 2.5z" fill="currentColor" stroke="none"/><path d="M8 21h8M12 17v4"/></symbol>
+  <symbol id="i-laptop" viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="11" rx="2"/><path d="M2 19h20"/></symbol>
+  <symbol id="i-cursor" viewBox="0 0 24 24"><path d="M4.5 3.5l15.5 6.2-6.8 1.9-2 6.9z" fill="currentColor" stroke="none"/></symbol>
+  <symbol id="i-monitor" viewBox="0 0 24 24"><rect x="2.5" y="4" width="19" height="13" rx="2"/><path d="M9 21h6M12 17v4"/></symbol>
+</svg>
+
+<!-- ================= ШАПКА ================= -->
+<header class="header" id="header">
+  <div class="container header-inner">
+    <a href="#" class="logo" aria-label="CableControll — на главную">
+      <span class="logo-mark"><svg class="ic"><use href="#i-cable"/></svg></span>
+      CableControll
+    </a>
+    <nav class="nav" aria-label="Основная навигация">
+      <a href="#features">Возможности</a>
+      <a href="#how">Как подключить</a>
+      <a href="#download">Скачать</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+    <!-- ССЫЛКА НА СКАЧИВАНИЕ №1 (дублируется переменной DOWNLOAD_URL в конце файла) -->
+    <a href="https://github.com/OceanPlay1/CableControl/raw/main/CableControl.zip" download data-dl class="btn btn-primary">
+      <svg class="ic"><use href="#i-dl"/></svg> Скачать бесплатно
+    </a>
+    <button class="burger" id="burger" aria-label="Открыть меню" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#features">Возможности</a>
+  <a href="#how">Как подключить</a>
+  <a href="#download">Скачать</a>
+  <a href="#faq">FAQ</a>
+  <a href="https://github.com/OceanPlay1/CableControl/raw/main/CableControl.zip" download data-dl class="btn btn-primary btn-block">
+    <svg class="ic"><use href="#i-dl"/></svg> Скачать бесплатно
+  </a>
+</div>
+
+<!-- ================= ГЕРОЙ ================= -->
+<section class="hero">
+  <div class="container hero-grid">
+    <div>
+      <div class="hero-badge reveal"><span class="pulse-dot"></span>$ adb devices &nbsp;→&nbsp; <b>21f3a9c4&nbsp;&nbsp;device</b></div>
+      <h1 class="reveal" style="--d:.08s">Телефон — на мониторе.<br><span class="accent">Управление — в обе стороны.</span></h1>
+      <p class="hero-sub reveal" style="--d:.16s">
+        <strong>CableControll</strong> выводит экран Android на монитор, передаёт звук и файлы
+        и позволяет управлять компьютером прямо с телефона —
+        <strong>по одному USB-кабелю, через USB-отладку</strong>. Бесплатно, без рекламы и регистрации.
+      </p>
+      <div class="hero-actions reveal" style="--d:.24s">
+        <!-- ССЫЛКА НА СКАЧИВАНИЕ №2 -->
+        <a href="https://github.com/OceanPlay1/CableControl/raw/main/CableControl.zip" download data-dl class="btn btn-primary btn-lg">
+          <svg class="ic"><use href="#i-dl"/></svg> Скачать для Windows
+        </a>
+        <a href="#download" class="btn btn-ghost btn-lg">
+          <svg class="ic"><use href="#i-laptop"/></svg> Другие платформы
+        </a>
+      </div>
+      <p class="hero-note" id="osNote"></p>
+      <div class="hero-chips reveal" style="--d:.32s">
+        <span class="chip"><svg class="ic"><use href="#i-check"/></svg> Бесплатно навсегда</span>
+        <span class="chip"><svg class="ic"><use href="#i-check"/></svg> Без рекламы</span>
+        <span class="chip"><svg class="ic"><use href="#i-check"/></svg> Без регистрации</span>
+        <span class="chip"><svg class="ic"><use href="#i-laptop"/></svg> Windows 10/11</span>
+      </div>
+    </div>
+
+    <!-- Живая демонстрация -->
+    <div class="demo-wrap reveal" style="--d:.2s">
+      <div class="demo" id="demo">
+        <div class="demo-inner" id="demoInner">
+          <div class="phone">
+            <div class="phone-body">
+              <div class="phone-screen" id="phoneScreen">
+                <div class="phone-notch"></div>
+                <div class="phone-ui" id="phoneUi">
+                  <div class="p-status">
+                    <span>21:47</span>
+                    <span class="right">
+                      <svg class="ic"><use href="#i-wifi"/></svg>
+                      <svg class="ic"><use href="#i-batt"/></svg>
+                    </span>
+                  </div>
+                  <div class="p-clock">21:47</div>
+                  <div class="p-date">Чт, 12 июня</div>
+                  <div class="p-grid">
+                    <div class="p-tile"><svg class="ic"><use href="#i-cam"/></svg></div>
+                    <div class="p-tile"><svg class="ic"><use href="#i-msg"/></svg></div>
+                    <div class="p-tile"><svg class="ic"><use href="#i-music"/></svg></div>
+                    <div class="p-tile"><svg class="ic"><use href="#i-sliders"/></svg></div>
+                  </div>
+                  <div class="p-dock">
+                    <svg class="ic"><use href="#i-dev"/></svg>
+                    <svg class="ic"><use href="#i-call"/></svg>
+                    <svg class="ic"><use href="#i-globe"/></svg>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="monitor">
+            <div class="monitor-screen">
+              <div class="app-window">
+                <div class="app-bar">
+                  <span class="app-dot"></span><span class="app-dot"></span><span class="app-dot"></span>
+                  <span class="app-title">CableControll — Redmi Note 12</span>
+                  <span class="app-pill">H.264 · 60 fps</span>
+                </div>
+                <div class="app-body">
+                  <div class="app-side">
+                    <svg class="ic on"><use href="#i-mirror"/></svg>
+                    <svg class="ic"><use href="#i-vol"/></svg>
+                    <svg class="ic"><use href="#i-files"/></svg>
+                    <svg class="ic"><use href="#i-kbd"/></svg>
+                  </div>
+                  <div class="mirror" id="mirror">
+                    <div class="mirror-scale" id="mirrorScale"></div>
+                  </div>
+                  <div class="app-main">
+                    <div class="m-row"><span>FPS</span><b class="on">60</b></div>
+                    <div class="m-bar"><i></i></div>
+                    <div class="m-row"><span>БИТРЕЙТ</span><b>12.4 Мбит/с</b></div>
+                    <div class="m-row"><span>ЗАДЕРЖКА</span><b>9 мс</b></div>
+                    <div class="m-row"><span>РАЗРЕШЕНИЕ</span><b>1080×2400</b></div>
+                    <div class="m-cap">кадры идут по кабелю →</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="monitor-stand"></div>
+            <div class="monitor-base"></div>
+          </div>
+
+          <svg class="cable" viewBox="0 0 640 448" aria-hidden="true">
+            <path id="cablePath" fill="none" stroke="#454C50" stroke-width="3.2" stroke-linecap="round"
+              d="M 170 215 C 210 218, 200 320, 262 330 C 332 341, 292 414, 366 409 C 412 406, 410 356, 424 337 C 429 331, 431 331, 429 328"/>
+            <rect class="plug" x="164" y="208" width="15" height="14" rx="4"/>
+            <rect class="plug" x="422" y="318" width="14" height="16" rx="4"/>
+            <circle class="packet" r="3.6"><animateMotion dur="3.4s" repeatCount="indefinite"><mpath href="#cablePath"/></animateMotion></circle>
+            <circle class="packet" r="2.8" opacity=".65"><animateMotion dur="3.4s" repeatCount="indefinite" begin="-1.15s"><mpath href="#cablePath"/></animateMotion></circle>
+            <circle class="packet" r="2.2" opacity=".4"><animateMotion dur="3.4s" repeatCount="indefinite" begin="-2.3s"><mpath href="#cablePath"/></animateMotion></circle>
+          </svg>
+        </div>
+      </div>
+      <div class="demo-hint">
+        <svg class="ic"><use href="#i-cursor"/></svg>
+        Живая демонстрация: поводите курсором по телефону и по окну на мониторе
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= ВОЗМОЖНОСТИ ================= -->
+<section class="section" id="features">
+  <div class="container">
+    <div class="section-head reveal">
+      <div class="kicker">01 · Возможности</div>
+      <h2>Один кабель — шесть суперсил</h2>
+      <p>Всё, что удобно делать с телефоном на большом экране, — в одной бесплатной утилите.</p>
+    </div>
+    <div class="features">
+      <article class="f-card span-7 reveal">
+        <div class="f-ico"><svg class="ic"><use href="#i-mirror"/></svg></div>
+        <h3>Зеркалирование экрана</h3>
+        <p>Экран Android появляется в отдельном окне на мониторе — с плавной картинкой: данные успевают пройти по кабелю быстрее, чем вы моргнёте.</p>
+        <div class="f-meta">H.264 / H.265 · до 60 fps · 1080p+</div>
+      </article>
+      <article class="f-card span-5 reveal" style="--d:.08s">
+        <div class="f-ico"><svg class="ic"><use href="#i-mouse"/></svg></div>
+        <h3>Управление с ПК</h3>
+        <p>Кликайте, скролльте и перетаскивайте мышью, печатайте физической клавиатурой. Текст из буфера обмена ПК вставляется в любое поле на телефоне.</p>
+        <div class="f-meta"><kbd>Ctrl</kbd>+<kbd>V</kbd> — прямо в телефон</div>
+      </article>
+      <article class="f-card span-5 reveal">
+        <div class="f-ico"><svg class="ic"><use href="#i-vol"/></svg></div>
+        <h3>Звук телефона — на ПК</h3>
+        <p>Музыка, подкасты и звук из игр играют через колонки или наушники компьютера, пока телефон лежит на зарядке.</p>
+        <div class="f-meta">минимальная задержка · работает фоном</div>
+      </article>
+      <article class="f-card span-7 reveal" style="--d:.08s">
+        <div class="f-ico"><svg class="ic"><use href="#i-back"/></svg></div>
+        <h3>Экран ПК — на телефоне</h3>
+        <p>Обратная связь: рабочий стол компьютера отображается на экране телефона. Курсор, клавиатура и жесты работают в обе стороны.</p>
+        <div class="f-meta">жесты как на тачпаде · виртуальная клавиатура</div>
+      </article>
+      <article class="f-card span-7 reveal">
+        <div class="f-ico"><svg class="ic"><use href="#i-files"/></svg></div>
+        <h3>Передача файлов</h3>
+        <p>Перетащите файл в окно программы — он окажется в памяти телефона. И наоборот: тяните фото и видео из окна прямо в Проводник.</p>
+        <div class="f-meta">~/Downloads ⇄ /sdcard/Download</div>
+      </article>
+      <article class="f-card span-5 reveal" style="--d:.08s">
+        <div class="f-ico"><svg class="ic"><use href="#i-cable"/></svg></div>
+        <h3>Работа по кабелю</h3>
+        <p>Никакого Wi-Fi, помех и разрывов: трафик идёт напрямую по USB. Работает даже там, где сети нет вовсе.</p>
+        <div class="f-meta">0 мс сетевой задержки</div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ================= КАК ПОДКЛЮЧИТЬ ================= -->
+<section class="section section--soft" id="how">
+  <div class="container">
+    <div class="section-head reveal">
+      <div class="kicker">02 · Подключение</div>
+      <h2>Как подключить за 3 шага</h2>
+      <p>Никаких аккаунтов — только телефон, кабель и программа.</p>
+    </div>
+    <div class="steps">
+      <div class="step reveal">
+        <div class="step-num"><svg class="ic"><use href="#i-sliders"/></svg></div>
+        <div>
+          <h3>Включите USB-отладку на телефоне</h3>
+          <p>Это официальный режим Android для разработчиков — включается один раз, и доступ получает только ваш компьютер.</p>
+          <div class="crumbs">
+            <span class="crumb">Настройки</span><span class="crumb-sep">→</span>
+            <span class="crumb">О телефоне</span><span class="crumb-sep">→</span>
+            <span class="crumb">«Номер сборки» — тапнуть 7 раз</span><span class="crumb-sep">→</span>
+            <span class="crumb">Для разработчиков</span><span class="crumb-sep">→</span>
+            <span class="crumb crumb--on">USB-отладка ✓</span>
+          </div>
+        </div>
+      </div>
+      <div class="step reveal" style="--d:.06s">
+        <div class="step-num"><svg class="ic"><use href="#i-cable"/></svg></div>
+        <div>
+          <h3>Подключите кабель и разрешите доступ</h3>
+          <p>Соедините телефон и ПК обычным USB-кабелем. На экране телефона появится запрос — подтвердите его, поставив галочку «Всегда разрешать».</p>
+          <div class="adb-dialog">
+            <b>Разрешить отладку по USB?</b>
+            <div class="fp">Отпечаток ключа этого ПК: 3F:2A:9C:41:D8:07:B5:62</div>
+            <div class="row"><span class="no">Отмена</span><span class="yes">Разрешить</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="step reveal" style="--d:.12s">
+        <div class="step-num"><svg class="ic"><use href="#i-play"/></svg></div>
+        <div>
+          <h3>Запустите CableControll на ПК</h3>
+          <p>Программа сама найдёт подключённое устройство — экран телефона появится в окне автоматически. Драйверы и консоль не понадобятся.</p>
+          <div class="terminal">
+            <span class="dollar">$</span> cablecontroll<br>
+            <span class="ok">✓</span> Redmi Note 12 — connected &nbsp;·&nbsp; 60 fps &nbsp;·&nbsp; 9 ms
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= СКАЧИВАНИЕ ================= -->
+<section class="section" id="download">
+  <div class="container dl-grid">
+    <div class="dl-cta-wrap reveal">
+      <div class="kicker">03 · Скачать</div>
+      <h2 style="margin-bottom:26px">Забирайте бесплатно</h2>
+      <!-- ССЫЛКА НА СКАЧИВАНИЕ №3 (главная кнопка) -->
+      <a href="https://github.com/OceanPlay1/CableControl/raw/main/CableControl.zip" download data-dl class="btn btn-primary dl-cta">
+        <span class="big"><svg class="ic"><use href="#i-dl"/></svg> Скачать .exe — бесплатно</span>
+        <span class="small">CableControll v2.4.1 · Windows 10/11 · ~18 МБ</span>
+      </a>
+      <div class="trust">
+        <span class="chip"><svg class="ic"><use href="#i-check"/></svg> Бесплатно</span>
+        <span class="chip"><svg class="ic"><use href="#i-check"/></svg> Без рекламы</span>
+        <span class="chip"><svg class="ic"><use href="#i-check"/></svg> Без регистрации</span>
+      </div>
+      <!-- Замените хеш на SHA-256 своего реального файла -->
+      <div class="sha">
+        <span class="label">SHA-256</span>
+        <code id="shaValue">9f2c47abd0e15538b7c41a90eef362d108ba7c55d4e9f0a231b6c8847d216fa0</code>
+        <button id="copySha" aria-label="Скопировать SHA-256" title="Скопировать">
+          <svg class="ic"><use href="#i-copy"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="reveal" style="--d:.1s">
+      <table class="version-table">
+        <thead>
+          <tr><th>Файл</th><th>Версия</th><th>Дата</th><th>Размер</th><th></th></tr>
+        </thead>
+        <tbody>
+          <tr class="current">
+            <td><span class="file-cell">
+              <span class="name">CableControl.exe</span>
+              <span class="os">Windows 10 / 11 (x64)<span class="badge-os" id="badgeWin" style="display:none">ваша система</span></span>
+            </span></td>
+            <td class="ver">2.4.1</td><td>12.06.2025</td><td>~18 МБ</td>
+            <!-- ССЫЛКА НА СКАЧИВАНИЕ №4 -->
+            <td><a href="https://github.com/OceanPlay1/CableControl/raw/main/CableControl.zip" download data-dl class="dl-link" aria-label="Скачать для Windows"><svg class="ic"><use href="#i-dl"/></svg></a></td>
+          </tr>
+          <tr class="soon">
+            <td><span class="file-cell">
+              <span class="name">CableControl.dmg</span>
+              <span class="os">macOS 12+ (Intel, Apple Silicon)</span>
+            </span></td>
+            <td class="ver">—</td><td>скоро</td><td>—</td>
+            <td><span class="soon-pill">скоро</span></td>
+          </tr>
+          <tr class="soon">
+            <td><span class="file-cell">
+              <span class="name">CableControl.AppImage</span>
+              <span class="os">Linux x64 (Ubuntu, Fedora, Arch)</span>
+            </span></td>
+            <td class="ver">—</td><td>скоро</td><td>—</td>
+            <td><span class="soon-pill">скоро</span></td>
+          </tr>
+        </tbody>
+      </table>
+      <p style="color:var(--muted);font-size:13.5px;margin-top:16px">
+        Файл скачивается напрямую с GitHub-репозитория проекта. Установка не требует прав администратора.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= ТРЕБОВАНИЯ ================= -->
+<section class="section section--soft" id="specs">
+  <div class="container specs-grid">
+    <div class="reveal">
+      <div class="kicker">04 · Требования</div>
+      <h2>Системные требования</h2>
+      <p class="specs-note">CableControll использует стандартный механизм ADB из Android SDK. В Windows 10/11 драйверы ставятся автоматически при первом подключении.</p>
+    </div>
+    <div class="reveal" style="--d:.1s">
+      <div class="spec-row"><span class="k">ОС</span><span class="dots"></span><span class="v">Windows 10 / 11</span></div>
+      <div class="spec-row"><span class="k">Процессор</span><span class="dots"></span><span class="v">x64, от 1 ГГц</span></div>
+      <div class="spec-row"><span class="k">Оперативная память</span><span class="dots"></span><span class="v">4 ГБ (хватит и 2)</span></div>
+      <div class="spec-row"><span class="k">Место на диске</span><span class="dots"></span><span class="v">200 МБ</span></div>
+      <div class="spec-row"><span class="k">Разрешение экрана</span><span class="dots"></span><span class="v">от 1280×720</span></div>
+      <div class="spec-row"><span class="k">Телефон</span><span class="dots"></span><span class="v">Android 7.0+, USB-отладка</span></div>
+      <div class="spec-row"><span class="k">Права администратора</span><span class="dots"></span><span class="v">не требуются</span></div>
+      <div class="spec-row"><span class="k">Интернет</span><span class="dots"></span><span class="v">не нужен</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= БЕЗОПАСНОСТЬ ================= -->
+<section class="section" id="security">
+  <div class="container sec-grid">
+    <div class="reveal">
+      <div class="kicker">05 · Приватность</div>
+      <h2>Всё остаётся в кабеле</h2>
+      <p style="color:var(--muted);margin-top:16px;max-width:480px">
+        Соединение идёт напрямую между телефоном и компьютером по USB. У CableControll нет серверов, аккаунтов и телеметрии.
+      </p>
+      <div class="sec-points">
+        <div class="sec-point">
+          <svg class="ic"><use href="#i-shield"/></svg>
+          <div><b>Данные не покидают кабель</b><span>Картинка, звук и файлы идут только по проводу.</span></div>
+        </div>
+        <div class="sec-point">
+          <svg class="ic"><use href="#i-eyeoff"/></svg>
+          <div><b>Ноль телеметрии</b><span>Программа не собирает статистику и работает без интернета.</span></div>
+        </div>
+        <div class="sec-point">
+          <svg class="ic"><use href="#i-lock"/></svg>
+          <div><b>Официальный протокол ADB</b><span>Штатный механизм Android SDK. Телефон сам подтверждает доверие к вашему ПК.</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="reveal" style="--d:.1s">
+      <div class="flow-diagram">
+        <div class="flow-node"><svg class="ic"><use href="#i-dev"/></svg></div>
+        <div class="flow-line"><svg><line x1="0" y1="1" x2="100%" y2="1"/></svg></div>
+        <div class="flow-node flow-node--accent"><svg class="ic"><use href="#i-cable"/></svg></div>
+        <div class="flow-line"><svg><line x1="0" y1="1" x2="100%" y2="1"/></svg></div>
+        <div class="flow-node"><svg class="ic"><use href="#i-monitor"/></svg></div>
+      </div>
+      <div class="flow-caption">
+        <svg class="ic"><use href="#i-cloudoff"/></svg>
+        Облако и сторонние серверы в схеме не участвуют
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= FAQ ================= -->
+<section class="section section--soft" id="faq">
+  <div class="container">
+    <div class="section-head reveal">
+      <div class="kicker">06 · FAQ</div>
+      <h2>Частые вопросы</h2>
+    </div>
+    <div class="faq-list">
+      <details class="faq-item reveal">
+        <summary><span class="idx">01</span><span class="t">Нужен ли root-доступ?</span><span class="pm"></span></summary>
+        <div class="faq-a"><p><b>Нет.</b> Всё работает через официальный режим USB-отладки (ADB). Права суперпользователя не нужны, разблокировка загрузчика не нужна, гарантия не страдает.</p></div>
+      </details>
+      <details class="faq-item reveal" style="--d:.05s">
+        <summary><span class="idx">02</span><span class="t">Работает ли подключение по Wi-Fi?</span><span class="pm"></span></summary>
+        <div class="faq-a"><p>В текущей версии — <b>только по кабелю</b>. Это осознанное решение: кабель даёт нулевую задержку, стабильную картинку и полную приватность. Поддержку Wi-Fi планируем добавить в будущих релизах.</p></div>
+      </details>
+      <details class="faq-item reveal" style="--d:.1s">
+        <summary><span class="idx">03</span><span class="t">Сколько стоит программа?</span><span class="pm"></span></summary>
+        <div class="faq-a"><p><b>Бесплатно — полностью.</b> Нет рекламы, подписок, «Pro-версий», лимитов по времени и обязательной регистрации. Скачал — и пользуешься.</p></div>
+      </details>
+      <details class="faq-item reveal" style="--d:.15s">
+        <summary><span class="idx">04</span><span class="t">Это законно?</span><span class="pm"></span></summary>
+        <div class="faq-a"><p><b>Да, для своих устройств.</b> USB-отладка — официальный инструмент Android SDK. Используйте программу только на устройствах, которыми владеете или которыми вам разрешили управлять.</p></div>
+      </details>
+      <details class="faq-item reveal" style="--d:.2s">
+        <summary><span class="idx">05</span><span class="t">Безопасно ли включать USB-отладку?</span><span class="pm"></span></summary>
+        <div class="faq-a"><p><b>Да, при подключении к своему ПК.</b> Телефон каждый раз спрашивает разрешение и показывает отпечаток ключа компьютера. После работы режим можно просто выключить.</p></div>
+      </details>
+      <details class="faq-item reveal" style="--d:.25s">
+        <summary><span class="idx">06</span><span class="t">А iPhone поддерживается?</span><span class="pm"></span></summary>
+        <div class="faq-a"><p><b>Нет</b>, CableControll работает только с Android 7.0 и новее.</p></div>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- ================= ПОДВАЛ ================= -->
+<footer class="footer" id="footer">
+  <div class="container">
+    <div class="footer-top">
+      <div>
+        <a href="#" class="logo">
+          <span class="logo-mark"><svg class="ic"><use href="#i-cable"/></svg></span>
+          CableControll
+        </a>
+        <p class="footer-tag">Бесплатная утилита для управления телефоном с ПК и ПК с телефона. Всё — по одному USB-кабелю.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Продукт</h4>
+        <a href="#features">Возможности</a>
+        <a href="#how">Как подключить</a>
+        <a href="#download">Скачать</a>
+        <a href="#specs">Системные требования</a>
+      </div>
+      <div class="footer-col">
+        <h4>Помощь</h4>
+        <a href="#faq">FAQ</a>
+        <a href="#security">Безопасность</a>
+        <a href="mailto:support@cablecontroll.app">support@cablecontroll.app</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2025 CableControll. Все права на логотипы Android принадлежат их владельцам.</span>
+      <span style="font-family:'JetBrains Mono',monospace;font-size:12.5px">v2.4.1 · build 2410</span>
+    </div>
+  </div>
+</footer>
+
+<!-- Тост -->
+<div class="toast" id="toast" role="status">
+  <svg class="ic"><use href="#i-check"/></svg><span id="toastText">Скопировано</span>
+</div>
+
+<!-- Мобильная плавающая кнопка -->
+<div class="mobile-cta" id="mobileCta">
+  <div class="row"><span>v2.4.1 · Windows · ~18 МБ</span></div>
+  <a href="https://github.com/OceanPlay1/CableControl/raw/main/CableControl.zip" download data-dl class="btn btn-primary btn-block">
+    <svg class="ic"><use href="#i-dl"/></svg> Скачать бесплатно
+  </a>
+</div>
+
+<script>
+(function(){
+  'use strict';
+  /* ══════════════════════════════════════════════════════════════════
+     ▼▼▼  ССЫЛКА НА СКАЧИВАНИЕ — МЕНЯТЬ ТОЛЬКО В ЭТОЙ СТРОКЕ  ▼▼▼     */
+  var DOWNLOAD_URL = "https://github.com/OceanPlay1/CableControl/raw/main/CableControl.zip";
+  /* ▲▲▲  эта ссылка автоматически подставляется во ВСЕ кнопки  ▲▲▲   */
+
+  function $(s){ return document.querySelector(s); }
+  function $$(s){ return Array.prototype.slice.call(document.querySelectorAll(s)); }
+  // safe() — если в одном блоке случится ошибка, остальные всё равно выполнятся
+  function safe(fn){ try { fn(); } catch(e){ /* тихо игнорируем */ } }
+
+  /* 1. Подставляем ссылку во все кнопки с data-dl */
+  safe(function(){
+    $$('[data-dl]').forEach(function(a){ a.setAttribute('href', DOWNLOAD_URL); });
+  });
+
+  /* 2. Зеркало: клонируем экран телефона в окно монитора */
+  safe(function(){
+    var phoneScreen = $('#phoneScreen'), mirror = $('#mirror'), mirrorScale = $('#mirrorScale');
+    if (!phoneScreen || !mirror || !mirrorScale) return;
+    var ui = phoneScreen.querySelector('.phone-ui');
+    if (ui) mirrorScale.appendChild(ui.cloneNode(true));
+
+    var autoDot = document.createElement('div');
+    autoDot.className = 'auto-dot';
+    mirror.appendChild(autoDot);
+
+    var CURSOR = '<svg viewBox="0 0 24 24" style="width:15px;height:15px" fill="#E9EDF0" stroke="#0B0D0E" stroke-width="1.4"><path d="M4 2 L4 19 L8.5 15.2 L11 21 L13.8 19.8 L11.2 14.2 L17 14 Z"/></svg>';
+    function makeCursor(){ var d = document.createElement('div'); d.className = 'pc-cursor'; d.innerHTML = CURSOR; return d; }
+    function makeDot(){ var d = document.createElement('div'); d.className = 'touch-dot'; return d; }
+
+    var cursors = {}, dots = {};
+    [['phone', phoneScreen], ['mirror', mirror]].forEach(function(pair){
+      var c = makeCursor(); pair[1].appendChild(c); cursors[pair[0]] = c;
+      var d = makeDot();    pair[1].appendChild(d); dots[pair[0]] = d;
+    });
+
+    function rel(e, el){
+      var r = el.getBoundingClientRect();
+      return { x: Math.min(Math.max((e.clientX - r.left) / r.width, 0), 1),
+               y: Math.min(Math.max((e.clientY - r.top)  / r.height, 0), 1) };
+    }
+    function place(el, p){ el.style.left = (p.x * 100) + '%'; el.style.top = (p.y * 100) + '%'; }
+    function ripple(host, p){
+      var r = document.createElement('div');
+      r.className = 'ripple';
+      r.style.left = (p.x * 100) + '%'; r.style.top = (p.y * 100) + '%';
+      host.appendChild(r);
+      r.addEventListener('animationend', function(){ r.remove(); });
+    }
+
+    // Телефон → зеркало
+    phoneScreen.addEventListener('pointermove', function(e){
+      var p = rel(e, phoneScreen);
+      place(cursors.mirror, p); cursors.mirror.classList.add('show');
+      autoDot.style.display = 'none';
+    });
+    phoneScreen.addEventListener('pointerdown', function(e){
+      var p = rel(e, phoneScreen);
+      ripple(mirror, p); place(dots.mirror, p); dots.mirror.classList.add('show');
+    });
+    phoneScreen.addEventListener('pointerleave', function(){
+      cursors.mirror.classList.remove('show'); dots.mirror.classList.remove('show');
+    });
+
+    // Зеркало → телефон
+    mirror.addEventListener('pointermove', function(e){
+      var p = rel(e, mirror);
+      place(cursors.phone, p); cursors.phone.classList.add('show');
+    });
+    mirror.addEventListener('pointerdown', function(e){
+      var p = rel(e, mirror);
+      ripple(phoneScreen, p); place(dots.phone, p); dots.phone.classList.add('show');
+    });
+    mirror.addEventListener('pointerleave', function(){
+      cursors.phone.classList.remove('show'); dots.phone.classList.remove('show');
+    });
+  });
+
+  /* 3. Масштабирование демо-сцены под ширину колонки */
+  safe(function(){
+    var wrap = $('#demo'), inner = $('#demoInner');
+    if (!wrap || !inner) return;
+    function fit(){
+      var s = wrap.clientWidth / 640;
+      inner.style.transform = 'scale(' + s + ')';
+      wrap.style.height = (448 * s) + 'px';
+    }
+    window.addEventListener('resize', fit);
+    window.addEventListener('load', fit);
+    fit(); setTimeout(fit, 400);
+  });
+
+  /* 4. Шапка при скролле */
+  safe(function(){
+    var header = $('#header');
+    function onScroll(){ header.classList.toggle('scrolled', window.scrollY > 8); }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+  });
+
+  /* 5. Бургер-меню */
+  safe(function(){
+    var burger = $('#burger'), menu = $('#mobileMenu');
+    if (!burger || !menu) return;
+    burger.addEventListener('click', function(){
+      var open = menu.classList.toggle('open');
+      burger.classList.toggle('open', open);
+      burger.setAttribute('aria-expanded', open);
+    });
+    $$('a', 0); // no-op
+    menu.querySelectorAll('a').forEach(function(a){
+      a.addEventListener('click', function(){
+        menu.classList.remove('open'); burger.classList.remove('open');
+      });
+    });
+  });
+
+  /* 6. Определение ОС → подсказки и бейдж */
+  safe(function(){
+    var ua = navigator.userAgent;
+    var isMob = /Android|iPhone|iPad|Mobile/i.test(ua);
+    var isMac = /Mac OS X|Macintosh/.test(ua);
+    var isLin = /Linux/.test(ua) && !/Android/.test(ua) && !isMac;
+    var note = $('#osNote');
+    if (note){
+      if (isMob){
+        note.style.display = 'block';
+        note.textContent = 'Вы зашли с телефона: скачайте файл и перенесите его на компьютер — установщик для Windows.';
+      } else if (isMac || isLin){
+        note.style.display = 'block';
+        note.textContent = 'Сейчас доступен установщик для Windows. Версии для macOS и Linux — в разработке.';
+      }
+    }
+    var badge = $('#badgeWin');
+    if (badge && /Windows/.test(ua)) badge.style.display = '';
+  });
+
+  /* 7. Копирование SHA-256 + тост */
+  safe(function(){
+    var toast = $('#toast'), toastText = $('#toastText'), btn = $('#copySha'), code = $('#shaValue');
+    if (!toast || !btn || !code) return;
+    var timer;
+    function showToast(msg){
+      toastText.textContent = msg;
+      toast.classList.add('show');
+      clearTimeout(timer);
+      timer = setTimeout(function(){ toast.classList.remove('show'); }, 2400);
+    }
+    function fallbackCopy(text, cb){
+      var ta = document.createElement('textarea');
+      ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+      document.body.appendChild(ta); ta.select();
+      try { document.execCommand('copy'); cb(); } catch(e){}
+      ta.remove();
+    }
+    btn.addEventListener('click', function(){
+      var val = code.textContent.trim();
+      var done = function(){ showToast('SHA-256 скопирован в буфер обмена'); };
+      if (navigator.clipboard && navigator.clipboard.writeText){
+        navigator.clipboard.writeText(val).then(done).catch(function(){ fallbackCopy(val, done); });
+      } else fallbackCopy(val, done);
+    });
+  });
+
+  /* 8. FAQ: закрываем остальные при открытии нового */
+  safe(function(){
+    $$('.faq-item').forEach(function(d){
+      d.addEventListener('toggle', function(){
+        if (d.open){
+          $$('.faq-item[open]').forEach(function(o){ if (o !== d) o.removeAttribute('open'); });
+        }
+      });
+    });
+  });
+
+  /* 9. Появление при скролле (с запасным вариантом: всё видно) */
+  safe(function(){
+    var els = $$('.reveal');
+    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduce || !('IntersectionObserver' in window)){
+      els.forEach(function(el){ el.classList.add('in'); });
+      return;
+    }
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(en){
+        if (en.isIntersecting){ en.target.classList.add('in'); io.unobserve(en.target); }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -5% 0px' });
+    els.forEach(function(el){ io.observe(el); });
+  });
+  // Страховка: если наблюдатель почему-то не сработал — показываем всё через 2 секунды
+  setTimeout(function(){
+    $$('.reveal:not(.in)').forEach(function(el){ el.classList.add('in'); });
+  }, 2000);
+
+  /* 10. Мобильная плавающая кнопка */
+  safe(function(){
+    var cta = $('#mobileCta');
+    if (!cta || !/Android|iPhone|iPad|Mobile/i.test(navigator.userAgent)) return;
+    var hero = $('.hero'), foot = $('#footer');
+    if (!hero || !foot || !('IntersectionObserver' in window)) return;
+    var hp = false, fs = false;
+    function upd(){ cta.classList.toggle('show', hp && !fs); }
+    new IntersectionObserver(function(e){ hp = !e[0].isIntersecting; upd(); }, { threshold: 0 }).observe(hero);
+    new IntersectionObserver(function(e){ fs = e[0].isIntersecting; upd(); }, { threshold: 0.05 }).observe(foot);
+  });
+})();
+</script>
+</body>
+</html>
